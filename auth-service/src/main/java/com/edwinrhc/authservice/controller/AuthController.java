@@ -1,5 +1,6 @@
 package com.edwinrhc.authservice.controller;
 
+import com.edwinrhc.authservice.repository.UserRepository;
 import com.edwinrhc.authservice.security.JwtUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -9,19 +10,20 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public AuthController(JwtUtil jwtUtil) {
+    public AuthController(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/login")
     public String login(@RequestParam String username,
-                        @RequestParam String password){
-        // Dummy check: usuario "admin" y password "1234"
-        if("admin".equals(username) && "1234".equals(password)){
-            return jwtUtil.generateToken(username);
-        }
-        return "Incorrect credentials";
+                        @RequestParam String password) {
+        return userRepository.findByUsername(username)
+                .filter(user -> user.getPassword().equals(password))
+                .map(user -> jwtUtil.generateToken(username))
+                .orElse("Invalid username or password");
     }
 
     // Prueba : Usar token

@@ -5,11 +5,12 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "users")
+@Data
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 @Builder
 public class User {
 
