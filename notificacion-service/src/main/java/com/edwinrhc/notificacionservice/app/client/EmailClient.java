@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface EmailClient {
 
     @PostMapping("/api/email/send")
-    String sendEmail(@RequestParam String to,
-                     @RequestParam String subject,
-                     @RequestParam String text);
+    String sendEmail(@RequestParam("to") String to,
+                     @RequestParam("subject") String subject,
+                     @RequestParam("text") String text);
 }
